@@ -16,7 +16,6 @@ gesture = {
 # 사용할 제스처 선택
 rps_gesture = {0:'rock', 5:'paper', 9:'scissors'}
 
-
 # 랜드마크 감지를 위한 함수
 hands = mp_hands.Hands(
     max_num_hands=max_num_hands,
