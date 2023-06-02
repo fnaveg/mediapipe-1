@@ -1,0 +1,18 @@
+
+data= []
+with open('handxy.txt','r') as file:
+    for line in file :
+        line.strip('\n')
+        t = line.split(',')
+        t = [ str(i)for i in t ]
+        t = ','.join(t)
+        data.append(t)
+    
+    #print(data)
+
+
+import csv
+with open('data1.csv' , 'a') as f:
+    for line in data :
+        f.write(line)
+
