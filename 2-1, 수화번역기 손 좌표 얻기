@@ -23,7 +23,6 @@ def show():
         exit()
 
     while cap.isOpened():
-        cv2.putText(image, text ="back-to-back hits 'h' your keyboard", org=(100, 60), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(200, 0, 255), thickness=3)
 
         status, frame = cap.read()
         if status:
