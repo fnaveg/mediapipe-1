@@ -1,0 +1,74 @@
+import cv2
+import mediapipe as mp
+from tkinter import *
+from PIL import Image, ImageTk
+
+w=Tk()
+w.title('mediapipe scan hand')
+w.geometry('400x400')
+
+cap = ''
+
+mp_drawing = mp.solutions.drawing_utils
+mp_hands = mp.solutions.hands
+
+
+
+def show():
+    global cap
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        print("Could not open webcam")
+        exit()
+
+    while cap.isOpened():
+        cv2.putText(image, text ="back-to-back hits 'h' your keyboard", org=(100, 60), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(200, 0, 255), thickness=3)
+
+        status, frame = cap.read()
+        if status:
+            cv2.imshow("test", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        if cv2.waitKey(1) & 0xFF == ord('h'): #h 를 연타하고 촬영 시작
+            Z_1()
+    cap.release()
+    cv2.destroyAllWindows()
+
+def Z_1():
+    datax=[]
+    datay=[]
+
+    with mp_hands.Hands(
+    max_num_hands=2,
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5) as hands:
+        success, image = cap.read()
+
+        image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB) #BGR>RGB
+ 
+        results = hands.process(image) #손동작 인식 AI모델이 작동되고 결과 값이 result로 저장
+ 
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR) #RGB>BGR
+ 
+        if results.multi_hand_landmarks:  # result값이 정상인 경우에만 후속 작업 처리
+            for hand_landmarks in results.multi_hand_landmarks:
+                for i in range(0,20):
+                    if i not  in (0, 5, 9, 13, 17):
+                        datax.append(float(hand_landmarks.landmark[i].x*100))
+                        datay.append(float(hand_landmarks.landmark[i].y*100))
+        print(datax,datay)
+                        
+
+        with open('handxy.txt','a') as file:  #입력값을 text 파일에 저장
+                data=datax+datay
+                for k in data:
+                    file.write('%f,' % k)
+                file.write('\n')
+                                     
+ 
+
+button=Button(w, text='영상 보여주기',command=show).place(x=200,y=250)
+
+ 
+
